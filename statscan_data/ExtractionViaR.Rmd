@@ -1,0 +1,50 @@
+---
+title: Statcan data with cansim
+---
+
+# StatsCan Data Access with R
+
+Using the [cansim](https://mountainmath.github.io/cansim/index.html) package.
+
+
+```{r}
+install.packages("cansim")
+```
+
+```{r}
+library("cansim")
+```
+
+> Product Identification number (PID) is a unique product identifier for all Statistics Canada products, including large multidimensional tables. The first two digits refer to a subject, the next two digits refer to product type, the last four digits refer to the product itself.
+
+
+Specify the product ID (PID) to retrieve the table displayed at https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2710002201
+
+```{r}
+table <- get_cansim("271-000-22")
+```
+
+```{r}
+tail(table)
+```
+
+Exploring a time series as a specific `VECTOR` is referred to as information along the time axis.
+
+```{r}
+# 2013-01-01 is date from which on the data is provided
+get_cansim_vector("v54329358","2013-01-01")
+```
+
+Getting the meta data of the vector.
+
+```{r}
+get_cansim_vector_info("v54329358")
+```
+
+Finally, let's get a list of tables:
+
+```{r}
+head(list_cansim_tables())
+```
+
+
