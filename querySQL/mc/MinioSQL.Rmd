@@ -1,0 +1,63 @@
+---
+title: SQL Queries with mc
+---
+
+# SQL Queries with Minio
+
+Minio implements the [S3 SELECT API](https://docs.min.io/docs/minio-select-api-quickstart-guide.html). It is not effective for creating joins or other relational database tricks, but it's phenomenal at extracting exactly the data that you need, so that your queries are blazingly fast. 
+
+
+For reference on how to use this SQL flavour, look at
+
+[The AWS reference](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference-select.html)
+
+
+*Note: Amazon S3 Select does not support whole-object compression for Parquet objects.*
+[Source](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.select_object_content)
+
+**NOTE: The examples here use JSON, but CSV is better suited to large datasets, performing 10x faster in my experiment.**
+
+
+## Connect to storage
+
+```{sh}
+# Get the credentials
+source /vault/secrets/minio-minimal-tenant1
+mc config host add minio-minimal $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+
+# Get the credentials
+# source /vault/secrets/minio-pachyderm-tenant1
+# mc config host add minio-pachyderm $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+
+# Get the credentials
+# source /vault/secrets/minio-premium-tenant1
+# mc config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+```
+
+# Fast SQL Extractions
+
+Minio implements the S3 Select API, which reads a minimal amount of data off of disk. This makes the queries very fast, even on large tables. Also, you can read the data straight out of a file, without creating or managing a complex database.
+
+
+## Query your data with SQL (.csv.gz or .csv or .parquet)
+
+```{sh}
+mc sql --query "
+    SELECT PopTotal,PopDensity FROM s3object s 
+    WHERE s.Location like '%Canada%' 
+    LIMIT 50
+" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.csv.gz
+```
+
+**This also works with `.csv` and `.parquet`.
+
+### With JSON output
+
+```{sh}
+mc sql --json --query "
+    SELECT PopTotal,PopDensity FROM s3object s 
+    WHERE s.Location like '%Canada%' 
+    LIMIT 50
+" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.parquet
+```
+
