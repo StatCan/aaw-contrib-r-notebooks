@@ -1,0 +1,99 @@
+---
+title: "Interacting with Bucket Storage with R + mc"
+date: "`r Sys.Date()`"
+abstract: This example combines R with mc for the simplest possible storage workflow.
+---
+
+# Before you begin
+
+Make sure that you enabled Minio credential injection when you created this server!
+Otherwise, you will have a hard time connecting.
+
+![Enable Connection to Minio](kubeflow-minio-option.png)
+
+**In the following, you will need to replace the name `blair-drummond` with your name.**
+
+# Get Connected
+
+We will use `minimal` storage for this example, but the following applies mutatis mutandis to `premium` and `pachyderm`.
+
+
+```{sh, engine.path = '/bin/bash'}
+source /vault/secrets/minio-minimal-tenant1
+mc config host add minio-minimal $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+
+# source /vault/secrets/minio-pachyderm-tenant1
+# mc config host add minio-pachyderm $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+
+# source /vault/secrets/minio-premium-tenant1
+# mc config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+```
+
+This will configure the access for you.
+
+Then you proceed as in the examples!
+
+## Create your bucket
+
+Replace with your name!
+
+```{sh, engine.path = '/bin/bash'}
+mc mb minio-minimal/blair-drummond
+```
+
+## Upload a file
+
+```{sh, engine.path = '/bin/bash'}
+mc cp example.txt minio-minimal/blair-drummond/happy-bird.txt
+
+mc cp -r example-folder minio-minimal/blair-drummond/example-folder
+```
+
+
+
+## List objects
+
+```{sh, engine.path = '/bin/bash'}
+mc ls minio-minimal/blair-drummond/
+mc ls minio-minimal/shared/blair-drummond/
+```
+
+
+## Download a file
+
+```{sh, engine.path = '/bin/bash'}
+mc cp minio-minimal/blair-drummond/happy-bird.txt downloaded-example.txt
+```
+
+# Example with RData files
+
+You've seen how to upload, list, and download files.
+
+Using this, you can do cool things like save and upload .Rdata files. For example.
+
+
+```{r, fig.show='hold', eval=TRUE, include = TRUE}
+# Create your .rds file
+data("mtcars")
+saveRDS(mtcars, "mtcars.rds")
+```
+
+## Upload it 
+
+```{sh, engine.path = '/bin/bash'}
+mc cp mtcars.rds minio-minimal/blair-drummond/mtcars.rds
+```
+
+## Download it
+
+```{sh, engine.path = '/bin/bash'}
+mc cp minio-minimal/blair-drummond/mtcars.rds mtcars-two.rds
+```
+
+## Load it into R
+
+```{r, fig.show='hold', eval=TRUE, include = TRUE}
+mtcars_two <- readRDS("mtcars-two.rds")
+```
+
+That's it!
