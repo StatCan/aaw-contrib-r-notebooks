@@ -1,6 +1,5 @@
 ---
-title: Interacting with Bucket Storage
-author: Blair Drummond
+title: "Interacting with Bucket Storage"
 date: "`r Sys.Date()`"
 ---
 
@@ -10,6 +9,8 @@ Make sure that you enabled Minio credential injection when you created this serv
 Otherwise, you will have a hard time connecting.
 
 ![Enable Connection to Minio](kubeflow-minio-option.png)
+
+If you copy-paste this script for your own use, make sure that you also bring along the helper script `daaas_storage.R`.
 
 # Upload and download files from storage
 

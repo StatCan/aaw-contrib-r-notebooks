@@ -1,8 +1,9 @@
 ---
-title: SQL Queries with mc
+title: "SQL Queries with mc"
+abstract: Use mc to fetch data, then load it into R
 ---
 
-# SQL Queries with Minio
+# SQL Queries with Minio loaded into R
 
 Minio implements the [S3 SELECT API](https://docs.min.io/docs/minio-select-api-quickstart-guide.html). It is not effective for creating joins or other relational database tricks, but it's phenomenal at extracting exactly the data that you need, so that your queries are blazingly fast. 
 
@@ -10,7 +11,6 @@ Minio implements the [S3 SELECT API](https://docs.min.io/docs/minio-select-api-q
 For reference on how to use this SQL flavour, look at
 
 [The AWS reference](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference-select.html)
-
 
 *Note: Amazon S3 Select does not support whole-object compression for Parquet objects.*
 [Source](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.select_object_content)
@@ -20,7 +20,7 @@ For reference on how to use this SQL flavour, look at
 
 ## Connect to storage
 
-```{sh}
+```{sh, engine.path = '/bin/bash'}
 # Get the credentials
 source /vault/secrets/minio-minimal-tenant1
 mc config host add minio-minimal $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
@@ -41,23 +41,44 @@ Minio implements the S3 Select API, which reads a minimal amount of data off of 
 
 ## Query your data with SQL (.csv.gz or .csv or .parquet)
 
-```{sh}
+```{sh, engine.path = '/bin/bash'}
 mc sql --query "
     SELECT PopTotal,PopDensity FROM s3object s 
     WHERE s.Location like '%Canada%' 
     LIMIT 50
-" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.csv.gz
+" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.csv.gz > Query-Data.csv
 ```
 
-**This also works with `.csv` and `.parquet`.
+```{r}
+df <- read.csv("Query-Data.csv", header=FALSE, col.names = c("PopTotal", "PopDensity"))
+
+head(df)
+```
+
+**This also works with `.csv` and `.parquet`.**
 
 ### With JSON output
 
-```{sh}
+```{sh, engine.path = '/bin/bash'}
 mc sql --json --query "
     SELECT PopTotal,PopDensity FROM s3object s 
     WHERE s.Location like '%Canada%' 
     LIMIT 50
-" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.parquet
+" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.parquet > Query-Data.json
+```
+
+
+```{r}
+library(jsonlite)
+library(dplyr)
+
+### I don't know R well, so this is magic to me, but this 
+### is just streaming in the file line by line to a dataframe.
+### Since each line is a json string, you can't just read the whole
+### file as a json
+
+df <- "Query-Data.json"  %>% file %>% stream_in
+
+head(df)
 ```
 
