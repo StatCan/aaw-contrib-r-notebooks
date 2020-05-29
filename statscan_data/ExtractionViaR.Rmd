@@ -1,5 +1,5 @@
 ---
-title: Statcan data with cansim
+title: "Statcan data with cansim"
 ---
 
 # StatsCan Data Access with R
@@ -8,7 +8,7 @@ Using the [cansim](https://mountainmath.github.io/cansim/index.html) package.
 
 
 ```{r}
-install.packages("cansim")
+install.packages("cansim", repos='http://cran.us.r-project.org')
 ```
 
 ```{r}
