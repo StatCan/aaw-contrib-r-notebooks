@@ -1,8 +1,9 @@
 ---
 title: "SQL Queries with mc"
+abstract: Use mc to fetch data, then load it into R
 ---
 
-# SQL Queries with Minio
+# SQL Queries with Minio loaded into R
 
 Minio implements the [S3 SELECT API](https://docs.min.io/docs/minio-select-api-quickstart-guide.html). It is not effective for creating joins or other relational database tricks, but it's phenomenal at extracting exactly the data that you need, so that your queries are blazingly fast. 
 
@@ -49,10 +50,12 @@ mc sql --query "
 ```
 
 ```{r}
-df <- read.csv("Query-Data.csv")
+df <- read.csv("Query-Data.csv", header=FALSE, col.names = c("PopTotal", "PopDensity"))
+
+head(df)
 ```
 
-**This also works with `.csv` and `.parquet`.
+**This also works with `.csv` and `.parquet`.**
 
 ### With JSON output
 
@@ -61,6 +64,21 @@ mc sql --json --query "
     SELECT PopTotal,PopDensity FROM s3object s 
     WHERE s.Location like '%Canada%' 
     LIMIT 50
-" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.parquet
+" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.parquet > Query-Data.json
+```
+
+
+```{r}
+library(jsonlite)
+library(dplyr)
+
+### I don't know R well, so this is magic to me, but this 
+### is just streaming in the file line by line to a dataframe.
+### Since each line is a json string, you can't just read the whole
+### file as a json
+
+df <- "Query-Data.json"  %>% file %>% stream_in
+
+head(df)
 ```
 
