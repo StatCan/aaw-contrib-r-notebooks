@@ -38,7 +38,7 @@ Then you proceed as in the examples!
 Replace with your name!
 
 ```{sh, engine.path = '/bin/bash'}
-mc mb minio-minimal/blair-drummond
+mc mb -p minio-minimal/blair-drummond
 ```
 
 ## Upload a file
@@ -54,8 +54,12 @@ mc cp -r example-folder minio-minimal/blair-drummond/example-folder
 ## List objects
 
 ```{sh, engine.path = '/bin/bash'}
+echo private:
 mc ls minio-minimal/blair-drummond/
-mc ls minio-minimal/shared/blair-drummond/
+
+echo
+echo shared:
+mc ls minio-minimal/shared/blair-drummond/ || true
 ```
 
 
@@ -94,6 +98,8 @@ mc cp minio-minimal/blair-drummond/mtcars.rds mtcars-two.rds
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
 mtcars_two <- readRDS("mtcars-two.rds")
+
+head(mtcars_two)
 ```
 
 That's it!

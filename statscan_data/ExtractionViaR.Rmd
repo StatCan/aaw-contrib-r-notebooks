@@ -1,5 +1,6 @@
 ---
 title: "Statcan data with cansim"
+abstract: Load data from statcan into R using the cansim package
 ---
 
 # StatsCan Data Access with R
