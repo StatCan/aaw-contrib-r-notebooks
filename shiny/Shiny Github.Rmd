@@ -1,0 +1,72 @@
+---
+title: "Shiny Dashboards from Github"
+output: html_document
+---
+
+# Launch a Shiny application from Github!
+
+This example downloads a dashboard to run from Github. All you need are the dashboard's dependencies install and the `shiny` package. **Note, once you run it, you may need to enable popups**
+
+
+To see some examples of Shiny apps, you can go to [the R-Dashbaords repository](https://github.com/StatCan/R-dashboards)
+
+**To use this example, click the little "Run Chunk" arrow beside each code block**
+
+
+## A Simple Example
+
+```{r, eval=FALSE}
+shinystuff = c("shiny", "shinyboard")
+for (package in shinystuff) {
+  print(package)
+  if (!require(package, character.only=TRUE))
+    install.packages(package)
+}
+
+shiny::runGitHub("shiny-examples", "rstudio", subdir = "005-sliders")
+
+```
+
+# An example from our repository
+
+This next example requires `gdal` which take a while to install. Bear with it!!!
+
+## Install the dependencies (conda is recommended)
+
+```{sh, engine.path = '/bin/bash', eval=FALSE}
+conda install --yes --use-local gdal r-rgdal
+echo Done
+```
+
+```{r, eval=FALSE}
+dependencies = c(
+    "shiny",
+    "shinyboard",
+    "plotly",
+    "shinycssloaders",
+    "shinyjs",
+    "shinythemes",
+    "leaflet",
+    "formatR",
+    "shiny.i18n",
+    "shinyWidgets",
+    "rgdal",
+    "sqldf",
+    "cansim",
+    "janitor"
+)
+
+for (package in dependencies) {
+  print(package)
+  if (!require(package, character.only=TRUE))
+    install.packages(package)
+}
+```
+
+# Run a dashboard!!!
+
+**NOTE: You will get a pop-up, which you will need to enable.**
+
+```{r, eval=FALSE}
+shiny::runGitHub("R-dashboards", "statcan", subdir = "ev-data-viz")
+```
