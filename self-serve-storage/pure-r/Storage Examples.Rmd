@@ -21,9 +21,8 @@ The difference is that instead of creating your own S3 Client object, you can ju
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
 source("daaas_storage.R")
-daaas_storage.minimal()
+daaas_storage.standard()
 # daaas_storage.premium()
-# daaas_storage.pachyderm()
 ```
 
 This will configure the access for you.
@@ -42,7 +41,7 @@ library("aws.s3")
 source("daaas_storage.R")
 
 # And create the client connection
-daaas_storage.minimal()
+daaas_storage.standard()
 ```
 
 

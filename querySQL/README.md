@@ -10,7 +10,7 @@ If you want to try it, you can use the `select_object` function from the `aws.s3
 <?xml version="1.0" encoding="UTF-8"?>
 <SelectObjectContentRequest xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
    <Expression>
-      SELECT PopTotal,PopDensity FROM s3object s 
+      SELECT PopTotal,PopDensity FROM s3object s
       WHERE s.Location like \'%Canada%\'
    </Expression>
    <ExpressionType>SQL</ExpressionType>
@@ -37,7 +37,7 @@ By contrast, this is accomplished by `mc` with
 
 ```sh
 mc sql --json --query "
-      SELECT PopTotal,PopDensity FROM s3object s 
+      SELECT PopTotal,PopDensity FROM s3object s
       WHERE s.Location like '%Canada%'
-" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.csv.gz | tee query-output.json
+" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.csv.gz | tee query-output.json
 ```

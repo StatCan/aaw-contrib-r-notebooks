@@ -15,17 +15,14 @@ Otherwise, you will have a hard time connecting.
 
 # Get Connected
 
-We will use `minimal` storage for this example, but the following applies mutatis mutandis to `premium` and `pachyderm`.
+We will use `standard` storage for this example, but the following applies mutatis mutandis to `premium`.
 
 
 ```{sh, engine.path = '/bin/bash'}
-source /vault/secrets/minio-minimal-tenant1
-mc config host add minio-minimal $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+source /vault/secrets/minio-standard-tenant-1
+mc config host add minio-standard $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 
-# source /vault/secrets/minio-pachyderm-tenant1
-# mc config host add minio-pachyderm $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-
-# source /vault/secrets/minio-premium-tenant1
+# source /vault/secrets/minio-premium-tenant-1
 # mc config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
@@ -38,15 +35,15 @@ Then you proceed as in the examples!
 Replace with your name!
 
 ```{sh, engine.path = '/bin/bash'}
-mc mb -p minio-minimal/blair-drummond
+mc mb -p minio-standard/blair-drummond
 ```
 
 ## Upload a file
 
 ```{sh, engine.path = '/bin/bash'}
-mc cp example.txt minio-minimal/blair-drummond/happy-bird.txt
+mc cp example.txt minio-standard/blair-drummond/happy-bird.txt
 
-mc cp -r example-folder minio-minimal/blair-drummond/example-folder
+mc cp -r example-folder minio-standard/blair-drummond/example-folder
 ```
 
 
@@ -55,18 +52,18 @@ mc cp -r example-folder minio-minimal/blair-drummond/example-folder
 
 ```{sh, engine.path = '/bin/bash'}
 echo private:
-mc ls minio-minimal/blair-drummond/
+mc ls minio-standard/blair-drummond/
 
 echo
 echo shared:
-mc ls minio-minimal/shared/blair-drummond/ || true
+mc ls minio-standard/shared/blair-drummond/ || true
 ```
 
 
 ## Download a file
 
 ```{sh, engine.path = '/bin/bash'}
-mc cp minio-minimal/blair-drummond/happy-bird.txt downloaded-example.txt
+mc cp minio-standard/blair-drummond/happy-bird.txt downloaded-example.txt
 ```
 
 # Example with RData files
@@ -82,16 +79,16 @@ data("mtcars")
 saveRDS(mtcars, "mtcars.rds")
 ```
 
-## Upload it 
+## Upload it
 
 ```{sh, engine.path = '/bin/bash'}
-mc cp mtcars.rds minio-minimal/blair-drummond/mtcars.rds
+mc cp mtcars.rds minio-standard/blair-drummond/mtcars.rds
 ```
 
 ## Download it
 
 ```{sh, engine.path = '/bin/bash'}
-mc cp minio-minimal/blair-drummond/mtcars.rds mtcars-two.rds
+mc cp minio-standard/blair-drummond/mtcars.rds mtcars-two.rds
 ```
 
 ## Load it into R

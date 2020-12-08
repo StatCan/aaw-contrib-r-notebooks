@@ -6,7 +6,7 @@ get_bash_variable <- function (location, var) {
             "bash -c 'source %s; echo $%s'",
             location,
             var
-        ), 
+        ),
         intern = TRUE
     )
 }
@@ -14,12 +14,12 @@ get_bash_variable <- function (location, var) {
 ### Just sets the environment variables.
 daaas_storage.__getClient__ <- function (storage_type) {
 
-    location = sprintf("/vault/secrets/minio-%s-tenant1", storage_type)
+    location = sprintf("/vault/secrets/minio-%s-tenant-1", storage_type)
 
     MINIO_URL        = get_bash_variable(location, "MINIO_URL")
     MINIO_ACCESS_KEY = get_bash_variable(location, "MINIO_ACCESS_KEY")
     MINIO_SECRET_KEY = get_bash_variable(location, "MINIO_SECRET_KEY")
-    
+
     ENDPOINT = gsub("https?://", "", MINIO_URL)
 
     Sys.setenv(
@@ -30,16 +30,11 @@ daaas_storage.__getClient__ <- function (storage_type) {
     )
 }
 
-    
-daaas_storage.minimal <- function () {
-    daaas_storage.__getClient__("minimal")
+
+daaas_storage.standard <- function () {
+    daaas_storage.__getClient__("standard")
 }
-    
+
 daaas_storage.premium <- function () {
     daaas_storage.__getClient__("premium")
 }
-    
-daaas_storage.pachyderm <- function () {
-    daaas_storage.__getClient__("pachyderm")
-}
-    

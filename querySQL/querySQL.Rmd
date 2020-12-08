@@ -5,7 +5,7 @@ abstract: Use mc to fetch data, then load it into R
 
 # SQL Queries with Minio loaded into R
 
-Minio implements the [S3 SELECT API](https://docs.min.io/docs/minio-select-api-quickstart-guide.html). It is not effective for creating joins or other relational database tricks, but it's phenomenal at extracting exactly the data that you need, so that your queries are blazingly fast. 
+Minio implements the [S3 SELECT API](https://docs.min.io/docs/minio-select-api-quickstart-guide.html). It is not effective for creating joins or other relational database tricks, but it's phenomenal at extracting exactly the data that you need, so that your queries are blazingly fast.
 
 
 For reference on how to use this SQL flavour, look at
@@ -22,31 +22,27 @@ For reference on how to use this SQL flavour, look at
 
 ```{sh, engine.path = '/bin/bash'}
 # Get the credentials
-source /vault/secrets/minio-minimal-tenant1
-mc config host add minio-minimal $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+source /vault/secrets/minio-standard-tenant-1
+mc config host add minio-standard $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 
 # Get the credentials
-# source /vault/secrets/minio-pachyderm-tenant1
-# mc config host add minio-pachyderm $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-
-# Get the credentials
-# source /vault/secrets/minio-premium-tenant1
+# source /vault/secrets/minio-premium-tenant-1
 # mc config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
 # Fast SQL Extractions
 
-Minio implements the S3 Select API, which reads a minimal amount of data off of disk. This makes the queries very fast, even on large tables. Also, you can read the data straight out of a file, without creating or managing a complex database.
+Minio implements the S3 Select API, which reads a standard amount of data off of disk. This makes the queries very fast, even on large tables. Also, you can read the data straight out of a file, without creating or managing a complex database.
 
 
 ## Query your data with SQL (.csv.gz or .csv or .parquet)
 
 ```{sh, engine.path = '/bin/bash'}
 mc sql --query "
-    SELECT PopTotal,PopDensity FROM s3object s 
-    WHERE s.Location like '%Canada%' 
+    SELECT PopTotal,PopDensity FROM s3object s
+    WHERE s.Location like '%Canada%'
     LIMIT 50
-" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.csv.gz > Query-Data.csv
+" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.csv.gz > Query-Data.csv
 ```
 
 ```{r}
@@ -61,10 +57,10 @@ head(df)
 
 ```{sh, engine.path = '/bin/bash'}
 mc sql --json --query "
-    SELECT PopTotal,PopDensity FROM s3object s 
-    WHERE s.Location like '%Canada%' 
+    SELECT PopTotal,PopDensity FROM s3object s
+    WHERE s.Location like '%Canada%'
     LIMIT 50
-" minio-minimal/shared/blair-drummond/sql-example/TotalPopulation.parquet > Query-Data.json
+" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.parquet > Query-Data.json
 ```
 
 
@@ -72,7 +68,7 @@ mc sql --json --query "
 library(jsonlite)
 library(dplyr)
 
-### I don't know R well, so this is magic to me, but this 
+### I don't know R well, so this is magic to me, but this
 ### is just streaming in the file line by line to a dataframe.
 ### Since each line is a json string, you can't just read the whole
 ### file as a json
