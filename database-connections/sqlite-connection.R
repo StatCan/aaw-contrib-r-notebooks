@@ -3,20 +3,11 @@
 ### You'll want to create a new database, instead of using this
 ### database of latin expressions, but you
 ### can copy-paste this example with a new database.
-
-library(odbc)
 library(DBI)
 
-if (file.exists("latin_phrases.db")) {
-  con <- dbConnect(
-    odbc::odbc(), 
-    .connection_string = paste(
-      "Driver={SQLite3}",
-      # Edit here
-      "Database=latin_phrases.db",
-      sep=";")
-  )
+if (file.exists("/home/jovyan/R-notebooks/database-connections/latin_phrases.db")) {
   
+  con <- dbConnect(RSQLite::SQLite(), "/home/jovyan/R-notebooks/database-connections/latin_phrases.db")
   dbGetQuery(con, "SELECT * FROM latin_phrases LIMIT 5")
   
 } else {
