@@ -56,7 +56,7 @@ head(df)
 ### With JSON output
 
 ```{sh, engine.path = '/bin/bash'}
-#<!-- NOTE: This works fro CSV but cannot run SQL queries on Parquet files due to security reason  -->
+#<!-- NOTE: This works for CSV but cannot run SQL queries on Parquet files due to security reason  -->
 ### With JSON output
 
 mc-original sql --json --query "
