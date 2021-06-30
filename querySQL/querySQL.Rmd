@@ -55,28 +55,29 @@ head(df)
 
 ### With JSON output
 
-<!-- ```{sh, engine.path = '/bin/bash'} -->
-<!-- #*Note: Amazon S3 Select does not support whole-object compression for Parquet objects.* -->
-<!-- #Parquet is dsabled by default since hostile crafted input can easily crash the server.  -->
-<!-- #To enable Parquet set the environment variable MINIO_API_SELECT_PARQUET=on -->
-<!-- mc-original sql --json --query " -->
-<!--     SELECT PopTotal,PopDensity FROM s3object s -->
-<!--     WHERE s.Location like '%Canada%' -->
-<!--     LIMIT 50" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.parquet > Query-Data.json -->
-<!-- ``` -->
+```{sh, engine.path = '/bin/bash'}
+#<!-- NOTE: This works fro CSV but cannot run SQL queries on Parquet files due to security reason  -->
+### With JSON output
+
+mc-original sql --json --query "
+    SELECT PopTotal,PopDensity FROM s3object s
+    WHERE s.Location like '%Canada%'
+    LIMIT 50" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.csv.gz > Query-Data.json
+```
 
 
 ```{r}
-# library(jsonlite)
-# library(dplyr)
-# 
-# ### I don't know R well, so this is magic to me, but this
-# ### is just streaming in the file line by line to a dataframe.
-# ### Since each line is a json string, you can't just read the whole
-# ### file as a json
-# 
-# df <- "Query-Data.json"  %>% file %>% stream_in
-# 
-# head(df)
+library(jsonlite)
+library(dplyr)
+
+### I don't know R well, so this is magic to me, but this
+### is just streaming in the file line by line to a dataframe.
+### Since each line is a json string, you can't just read the whole
+### file as a json
+
+
+df <- "Query-Data.json"  %>% file %>% stream_in
+
+head(df)
 ```
 
