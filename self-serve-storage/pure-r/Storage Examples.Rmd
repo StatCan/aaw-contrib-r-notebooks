@@ -46,8 +46,8 @@ daaas_storage.standard()
 #If Bucket already exists throws Error in parse_aws_s3_response(r, Sig, verbose = verbose) : Conflict (HTTP 409) which is acceptable.
 #Replace with your name!
 BUCKET = 'blair-drummond'
-
-b <- put_bucket(BUCKET, use_https=FALSE, region="")
+SECURE <- Sys.getenv("SECURE")
+b <- put_bucket(BUCKET, use_https=SECURE, region="")
 ```
 
 
@@ -59,7 +59,7 @@ put_object(
     object="happy-bird.txt",
     bucket=BUCKET,
     show_progress = TRUE,
-    use_https=FALSE,
+    use_https=SECURE,
     region=""
 )
 
@@ -67,7 +67,7 @@ put_folder(
     folder="example-folder",
     bucket=BUCKET,
     show_progress = TRUE,
-    use_https=FALSE,
+    use_https=SECURE,
     region=""
 )
 ```
@@ -77,7 +77,7 @@ put_folder(
 ## List objects
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
-get_bucket(bucket = BUCKET, use_https=FALSE, region="")
+get_bucket(bucket = BUCKET, use_https=SECURE, region="")
 ```
 
 
@@ -89,7 +89,7 @@ save_object(
     "happy-bird.txt",
     bucket=BUCKET,
     file="downloaded-example.txt",
-    use_https=FALSE,
+    use_https=SECURE,
     region=""
 )
 ```
