@@ -46,7 +46,7 @@ daaas_storage.standard()
 #If Bucket already exists throws Error in parse_aws_s3_response(r, Sig, verbose = verbose) : Conflict (HTTP 409) which is acceptable.
 #Replace with your name!
 BUCKET = 'blair-drummond'
-SECURE <- Sys.getenv("SECURE")
+SECURE <- as.logical(Sys.getenv("SECURE"))
 b <- put_bucket(BUCKET, use_https=SECURE, region="")
 ```
 
