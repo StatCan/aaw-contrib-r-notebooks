@@ -23,11 +23,11 @@ For reference on how to use this SQL flavour, look at
 ```{sh, engine.path = '/bin/bash'}
 # Get the credentials
 source /vault/secrets/minio-standard-tenant-1
-mc config host add minio-standard $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+mc-original config host add minio-standard $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 
 # Get the credentials
 # source /vault/secrets/minio-premium-tenant-1
-# mc config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+# mc-original config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
 # Fast SQL Extractions
@@ -38,7 +38,7 @@ Minio implements the S3 Select API, which reads a standard amount of data off of
 ## Query your data with SQL (.csv.gz or .csv or .parquet)
 
 ```{sh, engine.path = '/bin/bash'}
-mc sql --query "
+mc-original sql --query "
     SELECT PopTotal,PopDensity FROM s3object s
     WHERE s.Location like '%Canada%'
     LIMIT 50
@@ -56,11 +56,13 @@ head(df)
 ### With JSON output
 
 ```{sh, engine.path = '/bin/bash'}
-mc sql --json --query "
+#<!-- NOTE: This works for CSV but cannot run SQL queries on Parquet files due to security reason  -->
+### With JSON output
+
+mc-original sql --json --query "
     SELECT PopTotal,PopDensity FROM s3object s
     WHERE s.Location like '%Canada%'
-    LIMIT 50
-" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.parquet > Query-Data.json
+    LIMIT 50" minio-standard/shared/blair-drummond/sql-example/TotalPopulation.csv.gz > Query-Data.json
 ```
 
 
@@ -72,6 +74,7 @@ library(dplyr)
 ### is just streaming in the file line by line to a dataframe.
 ### Since each line is a json string, you can't just read the whole
 ### file as a json
+
 
 df <- "Query-Data.json"  %>% file %>% stream_in
 

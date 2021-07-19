@@ -5,11 +5,6 @@ date: "`r Sys.Date()`"
 
 # Before you begin
 
-Make sure that you enabled Minio credential injection when you created this server!
-Otherwise, you will have a hard time connecting.
-
-![Enable Connection to Minio](kubeflow-minio-option.png)
-
 If you copy-paste this script for your own use, make sure that you also bring along the helper script `daaas_storage.R`.
 
 # Upload and download files from storage
@@ -17,7 +12,6 @@ If you copy-paste this script for your own use, make sure that you also bring al
 Many of these examples are straight from the R `aws.s3` library.
 
 The difference is that instead of creating your own S3 Client object, you can just run:
-
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
 source("daaas_storage.R")
@@ -31,13 +25,13 @@ Then you proceed as in the examples!
 
 **NOTE: use_https=FALSE, region="" are required, unfortunately.**
 
-
 ## Get Connected
 
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
 install.packages("aws.s3")
 library("aws.s3")
+library("RJSONIO")
 source("daaas_storage.R")
 
 # And create the client connection
@@ -49,9 +43,11 @@ daaas_storage.standard()
 
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
+#If Bucket already exists throws Error in parse_aws_s3_response(r, Sig, verbose = verbose) : Conflict (HTTP 409) which is acceptable.
+#Replace with your name!
 BUCKET = 'blair-drummond'
-
-b <- put_bucket(BUCKET, use_https=FALSE, region="")
+SECURE <- as.logical(Sys.getenv("SECURE"))
+b <- put_bucket(BUCKET, use_https=SECURE, region="")
 ```
 
 
@@ -63,7 +59,7 @@ put_object(
     object="happy-bird.txt",
     bucket=BUCKET,
     show_progress = TRUE,
-    use_https=FALSE,
+    use_https=SECURE,
     region=""
 )
 
@@ -71,7 +67,7 @@ put_folder(
     folder="example-folder",
     bucket=BUCKET,
     show_progress = TRUE,
-    use_https=FALSE,
+    use_https=SECURE,
     region=""
 )
 ```
@@ -81,7 +77,7 @@ put_folder(
 ## List objects
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
-get_bucket(bucket = BUCKET, use_https=FALSE, region="")
+get_bucket(bucket = BUCKET, use_https=SECURE, region="")
 ```
 
 
@@ -93,7 +89,7 @@ save_object(
     "happy-bird.txt",
     bucket=BUCKET,
     file="downloaded-example.txt",
-    use_https=FALSE,
+    use_https=SECURE,
     region=""
 )
 ```

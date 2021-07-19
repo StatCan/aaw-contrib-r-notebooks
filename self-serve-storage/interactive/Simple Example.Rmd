@@ -9,8 +9,6 @@ abstract: This example combines R with mc for the simplest possible storage work
 Make sure that you enabled Minio credential injection when you created this server!
 Otherwise, you will have a hard time connecting.
 
-![Enable Connection to Minio](kubeflow-minio-option.png)
-
 **In the following, you will need to replace the name `blair-drummond` with your name.**
 
 # Get Connected
