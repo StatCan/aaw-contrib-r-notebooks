@@ -15,8 +15,7 @@ The difference is that instead of creating your own S3 Client object, you can ju
 
 ```{r, fig.show='hold', eval=TRUE, include = TRUE}
 source("daaas_storage.R")
-daaas_storage.standard()
-# daaas_storage.premium()
+daaas_storage.setup_instances()
 ```
 
 This will configure the access for you.
@@ -35,9 +34,13 @@ library("RJSONIO")
 source("daaas_storage.R")
 
 # And create the client connection
-daaas_storage.standard()
+daaas_storage.get_instances()
 ```
+Choose one of the instances from the previous step for the next step.
 
+```{r, fig.show='hold', eval=TRUE, include = TRUE}
+daaas_storage.get_client("minio-standard")
+```
 
 ## Create your bucket
 

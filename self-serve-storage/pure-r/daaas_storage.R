@@ -9,12 +9,10 @@ get_bash_variable <- function (location, var) {
         intern = TRUE
     )
 }
-### Just sets the environment variables.
-daaas_storage.__getClient__<- function(storage_type = c("standard", "premium")) {
-
-    type <- match.arg(storage_type)
+# Just sets the environment variables.
+daaas_storage.get_client<- function(instance) {
     env_vars <- c("MINIO_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY")
-    location <- sprintf("/vault/secrets/minio-%s-tenant-1", type)
+    location <- sprintf("/vault/secrets/%s", instance)
     minio <- if (requireNamespace("jsonlite", quietly = TRUE)) {
         # jsonlite is installed on the AAW's R image
         # works just as well with RJSONIO::fromJSON or rjson::fromJSON
@@ -32,9 +30,10 @@ daaas_storage.__getClient__<- function(storage_type = c("standard", "premium")) 
         "SECURE" = startsWith(minio$MINIO_URL, "https")
     )
 }
-daaas_storage.standard <- function () {
-    daaas_storage.__getClient__("standard")
-}
-daaas_storage.premium <- function () {
-    daaas_storage.__getClient__("premium")
+
+daaas_storage.get_instances <- function () {
+    list <- grep(".*(?<!\\.json)$", list.files("/vault/secrets/"), perl=TRUE, value=TRUE)
+    for (i in list) {
+        print(i)
+    }
 }
