@@ -17,17 +17,17 @@ For reference on how to use this SQL flavour, look at
 
 **NOTE: The examples here use JSON, but CSV is better suited to large datasets, performing 10x faster in my experiment.**
 
+## Check what MinIO Instances are available
+```{sh, engine.path = '/bin/bash'}
+ls --ignore='*.*' /vault/secrets
+```
 
 ## Connect to storage
 
 ```{sh, engine.path = '/bin/bash'}
-# Get the credentials
+# Get the credentials, use one of the instances from the step before
 source /vault/secrets/minio-standard-tenant-1
 mc-original config host add minio-standard $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-
-# Get the credentials
-# source /vault/secrets/minio-premium-tenant-1
-# mc-original config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
 # Fast SQL Extractions

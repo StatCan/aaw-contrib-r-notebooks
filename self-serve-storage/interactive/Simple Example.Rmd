@@ -11,17 +11,20 @@ Otherwise, you will have a hard time connecting.
 
 **In the following, you will need to replace the name `blair-drummond` with your name.**
 
+## Check what MinIO Instances are available
+```{sh, engine.path = '/bin/bash'}
+ls --ignore='*.json' /vault/secrets
+```
+
 # Get Connected
 
 We will use `standard` storage for this example, but the following applies mutatis mutandis to `premium`.
 
 
 ```{sh, engine.path = '/bin/bash'}
+# Choose one of the instances from the step before
 source /vault/secrets/minio-standard-tenant-1
 mc config host add minio-standard $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-
-# source /vault/secrets/minio-premium-tenant-1
-# mc config host add minio-premium $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
 This will configure the access for you.

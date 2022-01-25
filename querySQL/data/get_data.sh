@@ -9,6 +9,7 @@ import pandas
 pandas.read_csv('TotalPopulation.csv').to_parquet('TotalPopulation.parquet')
 EOF
 
+# Change MinIO Instance if need be 
 mkdir sql-example && mv TotalPopulation* sql-example
 mc mb minio-standard/shared/blair-drummond/
 mc cp -r sql-example minio-standard/shared/blair-drummond/
